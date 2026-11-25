@@ -1,0 +1,31 @@
+#status {
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+	margin: 12px 12px 4px;
+	color: #a6a6a6;
+	font:
+		12px/1.4 "Segoe UI",
+		system-ui,
+		sans-serif;
+}
+
+#status[hidden] {
+	display: none;
+}
+
+#status i {
+	flex: none;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #6b6b6b;
+}
+
+#status[data-kind="ok"] i {
+	background: #1f9d55;
+}
+
+#status[data-kind="warn"] i {
+	background: #d9a514;
+}

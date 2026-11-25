@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Soundboard</title>
+		<script src="sdpi-components.js"></script>
+		<link rel="stylesheet" href="status.css" />
+	</head>
+
+	<body>
+		<!--
+			Two lists from the plugin: the servers that have sounds ("getSoundServers"), then the
+			sounds of the server chosen ("getSounds"). A sound's id is only unique within its
+			server, so the key keeps both. The plugin sends the second list again when the server
+			changes, and lets go of a sound chosen under the old one. Both names are saved beside
+			their ids, so the key can show them while Refract is closed.
+		-->
+		<sdpi-item label="Server">
+			<sdpi-select
+				setting="serverId"
+				value-type="number"
+				label-setting="serverName"
+				datasource="getSoundServers"
+				hot-reload
+				show-refresh
+				placeholder="Choose a server"
+				loading="Loading servers…"
+			></sdpi-select>
+		</sdpi-item>
+
+		<sdpi-item label="Sound">
+			<sdpi-select
+				setting="soundId"
+				value-type="number"
+				label-setting="soundName"
+				datasource="getSounds"
+				hot-reload
+				show-refresh
+				placeholder="Choose a sound"
+				loading="Loading sounds…"
+			></sdpi-select>
+		</sdpi-item>
+
+		<sdpi-item label="Press Again">
+			<sdpi-checkbox setting="stopWhenPlaying" label="Stop the sound instead of restarting it"></sdpi-checkbox>
+		</sdpi-item>
+
+		<div id="status" hidden><i></i><span></span></div>
+		<script src="status.js"></script>
+	</body>
+</html>

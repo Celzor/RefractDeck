@@ -1,0 +1,254 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "RefractDeck",
+	"Version": "0.1.0.0",
+	"Author": "Celzor",
+	"Description": "Control your Refract.Chat call from Stream Deck: join a voice channel, mute, deafen, camera, stream, soundboard, push to talk, notifications and disconnect, with keys that follow the app.",
+	"Category": "RefractDeck",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"Icon": "imgs/plugin/icon",
+	"CodePath": "bin/plugin.js",
+	"PropertyInspectorPath": "ui/status.html",
+	"UUID": "plugins.refract.chat",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "7.1"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "24",
+		"Debug": "enabled"
+	},
+	"Actions": [
+		{
+			"Name": "Join Channel",
+			"UUID": "plugins.refract.chat.join-channel",
+			"Icon": "imgs/actions/join-channel/icon",
+			"Tooltip": "Join a voice channel. Press again to leave it.",
+			"PropertyInspectorPath": "ui/join-channel.html",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Not in the channel",
+					"Image": "imgs/actions/join-channel/key-0",
+					"TitleAlignment": "bottom",
+					"FontSize": 11
+				},
+				{
+					"Name": "In the channel",
+					"Image": "imgs/actions/join-channel/key-1",
+					"TitleAlignment": "bottom",
+					"FontSize": 11
+				}
+			]
+		},
+		{
+			"Name": "Disconnect",
+			"UUID": "plugins.refract.chat.disconnect",
+			"Icon": "imgs/actions/disconnect/icon",
+			"Tooltip": "Leave the call you are in.",
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+					"Image": "imgs/actions/disconnect/key-0",
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Stream",
+			"UUID": "plugins.refract.chat.stream",
+			"Icon": "imgs/actions/stream/icon",
+			"Tooltip": "Open Refract's screen share dialog. Becomes End Stream while you are sharing.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Not streaming",
+					"Image": "imgs/actions/stream/key-0",
+					"TitleAlignment": "bottom"
+				},
+				{
+					"Name": "Streaming",
+					"Image": "imgs/actions/stream/key-1",
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Push to Talk",
+			"UUID": "plugins.refract.chat.push-to-talk",
+			"Icon": "imgs/actions/push-to-talk/icon",
+			"Tooltip": "Hold to talk, while Refract is set to push to talk.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"SupportedInMultiActions": false,
+			"States": [
+				{
+					"Name": "Released",
+					"Image": "imgs/actions/push-to-talk/key-0",
+					"TitleAlignment": "top"
+				},
+				{
+					"Name": "Talking",
+					"Image": "imgs/actions/push-to-talk/key-1",
+					"TitleAlignment": "top"
+				}
+			]
+		},
+		{
+			"Name": "Push to Mute",
+			"UUID": "plugins.refract.chat.push-to-mute",
+			"Icon": "imgs/actions/push-to-mute/icon",
+			"Tooltip": "Hold to mute, while Refract is set to voice activity.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"SupportedInMultiActions": false,
+			"States": [
+				{
+					"Name": "Released",
+					"Image": "imgs/actions/push-to-mute/key-0",
+					"TitleAlignment": "top"
+				},
+				{
+					"Name": "Muted",
+					"Image": "imgs/actions/push-to-mute/key-1",
+					"TitleAlignment": "top"
+				}
+			]
+		},
+		{
+			"Name": "Deafen",
+			"UUID": "plugins.refract.chat.deafen",
+			"Icon": "imgs/actions/deafen/icon",
+			"Tooltip": "Stop or start hearing the call.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Hearing the call",
+					"Image": "imgs/actions/deafen/key-0",
+					"TitleAlignment": "bottom"
+				},
+				{
+					"Name": "Deafened",
+					"Image": "imgs/actions/deafen/key-1",
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Mute",
+			"UUID": "plugins.refract.chat.mute",
+			"Icon": "imgs/actions/mute/icon",
+			"Tooltip": "Mute or unmute your microphone.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Unmuted",
+					"Image": "imgs/actions/mute/key-0",
+					"TitleAlignment": "bottom"
+				},
+				{
+					"Name": "Muted",
+					"Image": "imgs/actions/mute/key-1",
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Voice Mode",
+			"UUID": "plugins.refract.chat.voice-mode",
+			"Icon": "imgs/actions/voice-mode/icon",
+			"Tooltip": "Switch your microphone between voice activity and push to talk.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Voice activity",
+					"Image": "imgs/actions/voice-mode/key-0",
+					"TitleAlignment": "top"
+				},
+				{
+					"Name": "Push to talk",
+					"Image": "imgs/actions/voice-mode/key-1",
+					"TitleAlignment": "top"
+				}
+			]
+		},
+		{
+			"Name": "Camera",
+			"UUID": "plugins.refract.chat.camera",
+			"Icon": "imgs/actions/camera/icon",
+			"Tooltip": "Turn your camera on or off.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Camera off",
+					"Image": "imgs/actions/camera/key-0",
+					"TitleAlignment": "bottom"
+				},
+				{
+					"Name": "Camera on",
+					"Image": "imgs/actions/camera/key-1",
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Soundboard",
+			"UUID": "plugins.refract.chat.soundboard",
+			"Icon": "imgs/actions/soundboard/icon",
+			"Tooltip": "Play a soundboard sound into the call.",
+			"PropertyInspectorPath": "ui/soundboard.html",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Not playing",
+					"Image": "imgs/actions/soundboard/key-0",
+					"TitleAlignment": "bottom",
+					"FontSize": 11
+				},
+				{
+					"Name": "Playing",
+					"Image": "imgs/actions/soundboard/key-1",
+					"TitleAlignment": "bottom",
+					"FontSize": 11
+				}
+			]
+		},
+		{
+			"Name": "Notifications",
+			"UUID": "plugins.refract.chat.notifications",
+			"Icon": "imgs/actions/notifications/icon",
+			"Tooltip": "Shows what is unread, and opens Refract at your notifications.",
+			"Controllers": ["Keypad"],
+			"DisableAutomaticStates": true,
+			"States": [
+				{
+					"Name": "Nothing unread",
+					"Image": "imgs/actions/notifications/key-0",
+					"TitleAlignment": "bottom"
+				},
+				{
+					"Name": "Unread",
+					"Image": "imgs/actions/notifications/key-1",
+					"TitleAlignment": "bottom"
+				}
+			]
+		}
+	]
+}
