@@ -300,7 +300,7 @@ export async function startMockRefract({
 				setState({});
 				return { ok: true };
 			case "openNotifications":
-				log("the window comes forward, on the Activity page");
+				log("the window comes forward, on the newest unread conversation");
 				return { ok: true };
 			case "setInputMode": {
 				const value = message.value;

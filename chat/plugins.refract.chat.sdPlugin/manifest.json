@@ -234,7 +234,7 @@
 			"Name": "Notifications",
 			"UUID": "plugins.refract.chat.notifications",
 			"Icon": "imgs/actions/notifications/icon",
-			"Tooltip": "Shows what is unread, and opens Refract at your notifications.",
+			"Tooltip": "Shows what is unread, and opens your newest unread conversation in Refract.",
 			"Controllers": ["Keypad"],
 			"DisableAutomaticStates": true,
 			"States": [

@@ -22,7 +22,7 @@ controlled.
 | Stream        | Brings Refract forward with its screen share dialog open. Press again to end the stream. | Start stream, or red End stream while sharing | in a call                                    |
 | Camera        | Turns your camera on or off.                                             | Green while the camera is on                         | in a call                                         |
 | Soundboard    | Plays the sound chosen for the key into the call.                        | The sound's name; green while it plays               | in a call in the sound's server, where you may use the soundboard |
-| Notifications | Brings Refract forward on its Activity page.                             | Red with a count while something is unread: `@2` for mentions, else the unread messages | signed in       |
+| Notifications | Brings Refract forward on your newest unread conversation: direct messages first, then servers. | Red with a count while something is unread: `@2` for mentions, else the unread messages | signed in       |
 | Push to Talk  | Hold to talk.                                                            | Green while talking, by this key or the keyboard's   | in a call, input mode Push to Talk                |
 | Push to Mute  | Hold to mute.                                                            | Red while held                                       | in a call, input mode Voice Activity              |
 | Deafen        | Stops or starts hearing the call.                                        | Red while deafened                                   | in a call                                         |
@@ -41,7 +41,8 @@ A Soundboard key plays one sound, so a board is a folder or a page of them. As i
 in a call in its own server, one at a time: pressing another key cuts the first sound off. Pressing a key again
 restarts its sound, or stops it if the key is set to.
 
-Notifications only ever knows two numbers, the ones on Refract's taskbar badge. Reading happens in the app.
+Notifications only ever knows two numbers, the ones on Refract's taskbar badge. Refract picks the conversation it
+opens, and opening it reads it, so pressing again moves on to the next one until the key goes dark.
 
 In a multi-action, Mute, Deafen, Camera, Stream and Voice Mode go to the state you pick there rather than toggling,
 Join Channel only ever joins, and Soundboard only ever plays. The two hold keys cannot be used in a multi-action.

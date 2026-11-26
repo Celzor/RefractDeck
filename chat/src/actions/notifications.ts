@@ -8,8 +8,9 @@ const short = (count: number): string => (count > 99 ? "99+" : String(count));
 
 /**
  * Shows how much is unread in Refract, mentions ahead of everything else, and
- * brings the app forward on its Activity page when pressed. Reading happens in
- * the app: the key only ever knows the two counts.
+ * when pressed brings the app forward on the newest unread conversation, direct
+ * messages before servers, which reading it there clears. The app picks which:
+ * the key only ever knows the two counts.
  */
 @action({ UUID: "plugins.refract.chat.notifications" })
 export class Notifications extends RefractKey {

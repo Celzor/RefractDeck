@@ -259,14 +259,14 @@ describe("with Refract running", () => {
 		await assert.rejects(client.send("playSound", { serverId: 1, soundId: 1 }), refused("unknown_sound"));
 	});
 
-	test("counts what is unread, and opens the app at its notifications", async () => {
+	test("counts what is unread, and opens the newest unread conversation", async () => {
 		mock.setState({ unread: 3, mentions: 1 });
 		await until(client, () => client.state.unread === 3 && client.state.mentions === 1, "the counts");
 		await client.send("openNotifications", {});
-		// opening them reads nothing by itself
+		// the key's counts change only when the app reports the conversation it opened as read
 		assert.equal(client.state.unread, 3);
-		mock.setState({ unread: 0, mentions: 0 });
-		await until(client, () => client.state.unread === 0, "reading them");
+		mock.setState({ unread: 2, mentions: 0 });
+		await until(client, () => client.state.unread === 2 && client.state.mentions === 0, "reading it");
 	});
 
 	test("follows changes made in the app itself", async () => {

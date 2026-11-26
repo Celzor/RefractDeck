@@ -2,7 +2,7 @@
 
 How a program on the same computer, such as the RefractDeck Stream Deck plugin, controls a call in the Refract.Chat
 desktop app: the buttons of the call bar (microphone, headphones, camera, soundboard, screen share, disconnect),
-joining a voice channel, and opening the app at its notifications.
+joining a voice channel, and opening the newest unread conversation.
 
 The desktop app is the **server**; RefractDeck is a **client**. This document is the contract between them. Two
 programs in the RefractDeck repository follow it exactly and can be used to check either side:
@@ -235,7 +235,7 @@ in either order. `message` is optional text for a log, at most 200 characters.
 | `pushToMute`   | `pressed`: boolean                                   | to press: connected, and `inputMode` is `"voiceActivity"` | While held, the microphone is silenced, exactly as while the push to mute key is held. Needs no key to be bound.          |
 | `playSound`    | `serverId`: whole number, `soundId`: whole number    | the sound is listed under that server in `sounds`, and `soundboard.serverId` is that server | Plays it into the call, as clicking it in the app's soundboard does, cutting off whichever sound this user is still playing. Works while `muted` or `deafened`. |
 | `stopSound`    | none                                                 | signed in                                             | Stops the sound this user is playing, as the soundboard's Stop does. Nothing playing: accepted, nothing happens.              |
-| `openNotifications` | none                                            | signed in                                             | Brings the app's window forward on its Activity page, where the user's mentions are listed. Marks nothing as read.            |
+| `openNotifications` | none                                            | signed in                                             | Brings the app's window forward and opens the newest conversation with anything unread, as clicking its button in the app's navigation dock does: the newest direct message or group first, else the server channel with the newest unread message. Muted conversations are left out, as from `unread`. Opening it reads it, as in the app. Nothing unread: only brings the window forward. |
 
 ### Holds
 

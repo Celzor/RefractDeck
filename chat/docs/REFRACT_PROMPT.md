@@ -3,7 +3,7 @@
 You are working in the Refract.Chat repository (`oasis-core`). Add a small, local-only control interface to the
 Electron desktop app: a WebSocket server in its main process, so that a Stream Deck plugin running on the same computer
 can do what the call bar (`frontend/src/components/shell/FloatingCallBar.tsx`) does, join a voice channel, play
-soundboard sounds, and open the app at its notifications.
+soundboard sounds, and open the newest unread conversation.
 
 The plugin already exists and is finished. It is called RefractDeck and lives outside this repository at
 `C:\Users\Celbr\OneDrive\Documents\vsCode Work\RefractDeck\chat`. It speaks the protocol in the appendix of this
@@ -24,7 +24,7 @@ From the Stream Deck, with the Refract desktop app running and signed in:
 | Stream        | `setStream`, `state.streaming`                       | Share screen, which opens the screen share dialog, and End stream (`startScreenShare`, `stopScreenShare`) |
 | Camera        | `setCamera`, `state.camera`                          | the call bar's camera button (`toggleCamera`)                                  |
 | Soundboard    | `sounds`, `playSound`, `stopSound`, `state.soundboard` | clicking a sound in the call bar's soundboard (`soundboardPlayer.play`)      |
-| Notifications | `state.unread`, `state.mentions`, `openNotifications` | the taskbar badge's counts, and the Activity page (`shell.goActivity`)        |
+| Notifications | `state.unread`, `state.mentions`, `openNotifications` | the taskbar badge's counts, and the navigation dock's unread buttons (`ShellNavigation.tsx`) |
 | Push to Talk  | `pushToTalk`                                         | holding the push to talk key                                                   |
 | Push to Mute  | `pushToMute`                                         | holding the push to mute key                                                   |
 | Deafen        | `setDeafen`                                          | `toggleDeafen`                                                                 |
@@ -90,9 +90,9 @@ This is what the code looked like on `develop` when the plugin was written. Veri
   - `frontend/src/components/DesktopBadgeBridge.tsx`: the two counts the taskbar badge shows, and where they come
     from (`useUnreadPart("totalUnreadCount")`, and `privateMentionCount` plus `mentionsByServer`). Muting and the
     unread badge setting already apply to them.
-  - `frontend/src/components/shell/ShellPages.tsx`, `ShellActivity`: the Activity page, the user's mentions.
-    `shell.goActivity` (`ShellContext.tsx`) opens it, and is provided by `ModernShell.tsx`. **`useShell()` only works
-    inside the shell**, and a bridge mounted beside `HotkeysBridge` in `App.tsx` is outside it. `messageLinks.setOpener`
+  - `frontend/src/components/shell/ShellNavigation.tsx`: the navigation dock, whose buttons for the newest unread
+    direct message and for the server with the newest unread message open them. **`useShell()` only works inside the
+    shell**, and a bridge mounted beside `HotkeysBridge` in `App.tsx` is outside it. `messageLinks.setOpener`
     (`lib/messageLinks.ts`) and `callDrop.setHandler` are how code outside the shell already reaches into it.
   - `electronAPI.focusWindow()` brings the window forward (`focusWindow` in `electron/window.ts`).
 - `CLAUDE.md` and `electron/README.md` (the "Hotkeys and push to talk" section) for conventions and for how the
@@ -182,9 +182,10 @@ This is what the code looked like on `develop` when the plugin was written. Veri
     `stopSound` is `soundboardPlayer.stop()`.
 22. `unread` and `mentions` are the two numbers `DesktopBadgeBridge` gives the taskbar badge, and zero while signed
     out. Share the calculation with it rather than writing it twice.
-23. `openNotifications` brings the window forward, also when it is minimised or closed to the tray, and shows the
-    Activity page, as `shell.goActivity` does. Check how a bridge outside the shell can ask for that (see "Where
-    things are"). It marks nothing as read and changes nothing else.
+23. `openNotifications` brings the window forward, also when it is minimised or closed to the tray, and opens the
+    newest conversation with anything unread as the navigation dock's buttons do: the newest direct message or group
+    first, else the server channel with the newest unread message, muted ones left out. Check how a bridge outside the
+    shell can ask for that (see "Where things are"). With nothing unread it only brings the window forward.
 24. The error precedence in section 4 is part of the contract (`unknown_action`, `invalid_request`, `not_ready`,
     then the state-dependent ones, with `playSound`'s own order under "Sounds").
 
@@ -257,8 +258,8 @@ the Stream Deck keys or a short script that sends the command. With local contro
 7. Add, rename and delete a sound in a server's settings, in a server that is not the one open, and watch `sounds`
    follow each.
 8. Have another account send a message and a mention somewhere not on screen: `unread` and `mentions` match the
-   taskbar badge, and fall when read. Minimise the app and send `openNotifications`: it comes forward on the Activity
-   page, and the counts have not changed.
+   taskbar badge, and fall when read. Minimise the app and send `openNotifications`: it comes forward on the direct
+   message, the counts fall, and sending it again opens the server channel.
 9. Switch local control off and confirm the file is gone and the checker can no longer connect. Quit the app with it
    on and confirm the file is gone.
 10. Open `http://example.com` in a browser, and from its console try `new WebSocket("ws://127.0.0.1:<port>")`. It
@@ -273,7 +274,7 @@ and the result of each run of the checker. Give the answers to the things you we
 - whether `joinRTC` needs the channel opened;
 - how the soundboards of servers that are not open are loaded and kept current, and what that costs an account in
   many servers;
-- how the bridge reaches the shell to open the Activity page.
+- how the bridge reaches the shell to open the newest unread conversation.
 
 The main process changed, so say plainly that the desktop app must be rebuilt and restarted, not only the web
 frontend.
@@ -286,7 +287,7 @@ frontend.
 
 How a program on the same computer, such as the RefractDeck Stream Deck plugin, controls a call in the Refract.Chat
 desktop app: the buttons of the call bar (microphone, headphones, camera, soundboard, screen share, disconnect),
-joining a voice channel, and opening the app at its notifications.
+joining a voice channel, and opening the newest unread conversation.
 
 The desktop app is the **server**; RefractDeck is a **client**. This document is the contract between them. Two
 programs in the RefractDeck repository follow it exactly and can be used to check either side:
@@ -519,7 +520,7 @@ in either order. `message` is optional text for a log, at most 200 characters.
 | `pushToMute`   | `pressed`: boolean                                   | to press: connected, and `inputMode` is `"voiceActivity"` | While held, the microphone is silenced, exactly as while the push to mute key is held. Needs no key to be bound.          |
 | `playSound`    | `serverId`: whole number, `soundId`: whole number    | the sound is listed under that server in `sounds`, and `soundboard.serverId` is that server | Plays it into the call, as clicking it in the app's soundboard does, cutting off whichever sound this user is still playing. Works while `muted` or `deafened`. |
 | `stopSound`    | none                                                 | signed in                                             | Stops the sound this user is playing, as the soundboard's Stop does. Nothing playing: accepted, nothing happens.              |
-| `openNotifications` | none                                            | signed in                                             | Brings the app's window forward on its Activity page, where the user's mentions are listed. Marks nothing as read.            |
+| `openNotifications` | none                                            | signed in                                             | Brings the app's window forward and opens the newest conversation with anything unread, as clicking its button in the app's navigation dock does: the newest direct message or group first, else the server channel with the newest unread message. Muted conversations are left out, as from `unread`. Opening it reads it, as in the app. Nothing unread: only brings the window forward. |
 
 #### Holds
 
